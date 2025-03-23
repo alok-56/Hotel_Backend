@@ -1,5 +1,4 @@
 const express = require("express");
-
 const { body } = require("express-validator");
 const Islogin = require("../Middleware/Islogin");
 const { GetAllCategoryForusers, CreateCategory, UpdateCategory, GetAllCategory, GetCategoryById, DeleteCategory } = require("../Controller/Product/Category");

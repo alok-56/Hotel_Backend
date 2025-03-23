@@ -3,6 +3,7 @@ const Branchmodel = require("../../Model/Branch");
 const AppErr = require("../../Helper/AppError");
 const Categoriesmodel = require("../../Model/categories");
 
+
 // Create Category
 const CreateCategory = async (req, res, next) => {
   try {
