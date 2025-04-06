@@ -15,6 +15,21 @@ const BranchSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    Heading: {
+      type: String,
+      required: true,
+    },
+    Description: {
+      type: String,
+      required: true,
+    },
+    HotelInfo: [],
+    Image: {
+      hotel: [],
+      rooms: [],
+      restaurant: [],
+      other: [],
+    },
   },
   { timestamps: true }
 );

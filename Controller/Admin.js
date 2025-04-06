@@ -30,6 +30,7 @@ const CreateAdmin = async (req, res, next) => {
     return next(new AppErr(error.message, 500));
   }
 };
+
 // Login Admin
 const LoginAdmin = async (req, res, next) => {
   try {
@@ -112,7 +113,7 @@ const UpdateAdmin = async (req, res, next) => {
     return res.status(200).json({
       status: true,
       code: 200,
-      message: "Admin Created Successfully",
+      message: "Admin Updated Successfully",
       data: updateBranch,
     });
   } catch (error) {
@@ -123,7 +124,8 @@ const UpdateAdmin = async (req, res, next) => {
 // Get All Admin Data
 const GetAllAdmin = async (req, res, next) => {
   try {
-    let admin = await Adminmodel.find({ Branch: { $in: req.branch } });
+    // { Branch: { $in: req.branch } }
+    let admin = await Adminmodel.find();
     return res.status(200).json({
       status: true,
       code: 200,

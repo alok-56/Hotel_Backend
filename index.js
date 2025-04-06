@@ -7,11 +7,9 @@ const DatabaseConnection = require("./Config/Database");
 const globalErrHandler = require("./Middleware/globalerror");
 const BranchRouter = require("./Routes/Branch");
 const AdminRouter = require("./Routes/Admin");
-const FloorRouter = require("./Routes/Floor");
-const KitchenRouter = require("./Routes/Kitchen");
-const TableRouter = require("./Routes/Table");
-const CategoryRouter = require("./Routes/Categories");
-const MenuRouter = require("./Routes/Menu");
+const Roomtrouter = require("./Routes/Rooms");
+const bookingrouter = require("./Routes/Booking");
+const FileRouter = require("./Routes/FileUpload");
 require("dotenv").config();
 DatabaseConnection();
 const app = express();
@@ -28,11 +26,9 @@ app.use(mongosanatize());
 // Route Middleware
 app.use("/api/v1/Admin", AdminRouter);
 app.use("/api/v1/Branch", BranchRouter);
-app.use("/api/v1/Floor", FloorRouter);
-app.use("/api/v1/Kitchen", KitchenRouter);
-app.use("/api/v1/Table", TableRouter);
-app.use("/api/v1/Category", CategoryRouter);
-app.use("/api/v1/Menu", MenuRouter);
+app.use("/api/v1/Room", Roomtrouter);
+app.use("/api/v1/booking", bookingrouter);
+app.use("/api/v1/file", FileRouter);
 
 // Not Found Route
 app.use("*", (req, res, next) => {
