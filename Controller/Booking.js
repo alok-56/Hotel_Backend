@@ -8,6 +8,7 @@ const Bookingmodal = require("../Model/Booking");
 const Paymentmodal = require("../Model/Payments");
 const { validationResult } = require("express-validator");
 require("dotenv").config();
+const mongoose = require("mongoose");
 
 // Create Payment Payload
 const createPaymentPayload = (
@@ -19,7 +20,6 @@ const createPaymentPayload = (
   bookingid
 ) => {
   const userid = `${Phonenumber} ${Name} ${Age} ${bookingid}`;
-
   let normalPayLoad = {
     merchantId: process.env.MERCHANT_ID,
     merchantTransactionId: transactionid,
@@ -38,9 +38,14 @@ const createPaymentPayload = (
 
 // Create Booking
 const BookRoom = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     let err = validationResult(req);
     if (err.errors.length > 0) {
+      await session.abortTransaction();
+      session.endSession();
       return next(new AppErr(err.errors[0].msg, 403));
     }
 
@@ -63,34 +68,44 @@ const BookRoom = async (req, res, next) => {
     req.body.BookingId = bookingid;
 
     if (!UserInformation) {
+      await session.abortTransaction();
+      session.endSession();
       return next(new AppErr("User Info Not Found", 404));
     }
 
     let { Name, Phonenumber, Age } = UserInformation;
 
-    // check branch
-    let branch = await Branchmodel.findById(BranchId);
+    let branch = await Branchmodel.findById(BranchId).session(session);
     if (!branch) {
+      await session.abortTransaction();
+      session.endSession();
       return next(new AppErr("Branch Not Found", 404));
     }
 
-    // check room
-    let room = await Roommodal.findById(RoomId);
+    let room = await Roommodal.findById(RoomId).session(session);
     if (!room) {
+      await session.abortTransaction();
+      session.endSession();
       return next(new AppErr("Room Not Found", 404));
     }
 
-    let bookingroom = await Bookingmodal.create(req.body);
+    // Create booking (in transaction)
+    let bookingroom = await Bookingmodal.create([req.body], { session });
 
-    // Create payment details and save
+    // Create payment (in transaction)
     let paymentcreate = new Paymentmodal({
       BranchId: BranchId,
-      BookingId: bookingroom._id,
+      BookingId: bookingroom[0]._id,
       merchantTransactionId: transactionid,
       Tax: Tax,
       TotalAmount: TotalAmount,
     });
-    await paymentcreate.save();
+
+    await paymentcreate.save({ session });
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
 
     // Prepare payment payload
     const base64EncodedPayload = createPaymentPayload(
@@ -137,6 +152,8 @@ const BookRoom = async (req, res, next) => {
         });
       });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     return next(new AppErr(error.message, 500));
   }
 };
@@ -164,10 +181,9 @@ const ValidatePayment = async (req, res, next) => {
       .then(async (response) => {
         if (response.data && response.data.code === "PAYMENT_SUCCESS") {
           let payment = await Paymentmodal.findOne({
-            TransactionId: merchantTransactionId,
+            merchantTransactionId: merchantTransactionId,
           });
           payment.Status = true;
-          payment.TransactionId = response.data.transactionId;
 
           let booking = await Bookingmodal.findById(payment.BookingId);
           booking.PaymentId = payment._id;

@@ -161,7 +161,7 @@ const SearchRoom = async (req, res, next) => {
           },
         },
       ],
-    });
+    }).populate("BranchId");
 
     rooms = rooms.filter((room) => {
       return room.BookingDate.every((booking) => {

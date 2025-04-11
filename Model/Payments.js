@@ -17,11 +17,9 @@ const PaymentSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    TransactionId: {
-      type: String
-    },
     Tax: {
       type: Number,
+      unique:false
     },
     TotalAmount: {
       type: Number,

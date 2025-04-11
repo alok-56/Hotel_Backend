@@ -29,6 +29,6 @@ Roomtrouter.get("/get/room/:id", Islogin, GetRoomById);
 
 Roomtrouter.delete("/delete/room/:id", Islogin, deleteroom);
 
-Roomtrouter.get("/search/room", Islogin, SearchRoom);
+Roomtrouter.get("/search/room", SearchRoom);
 
 module.exports = Roomtrouter;
