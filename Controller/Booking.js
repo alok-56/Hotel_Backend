@@ -416,11 +416,15 @@ const MyBooking = async (req, res, next) => {
     });
 
     if (!bookings.length) {
-      return res.status(404).json({
-        status: false,
-        code: 404,
-        message: "No bookings found for this phone number.",
-      });
+      return res
+        .status(404)
+        .json({
+          status: false,
+          code: 404,
+          message: "No bookings found for this phone number.",
+        })
+        .populate("PaymentId")
+        .populate("RoomId");
     }
 
     return res.status(200).json({

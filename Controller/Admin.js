@@ -192,6 +192,8 @@ const DeleteAdmin = async (req, res, next) => {
   }
 };
 
+
+
 module.exports = {
   CreateAdmin,
   LoginAdmin,
