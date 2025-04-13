@@ -55,7 +55,7 @@ const LoginAdmin = async (req, res, next) => {
     return res.status(200).json({
       status: true,
       code: 200,
-      message: "Admin Created Successfully",
+      message: "Admin Login Successfully",
       data: admincheck,
       token: token,
     });
@@ -102,7 +102,7 @@ const UpdateAdmin = async (req, res, next) => {
     if (Username) updateData.Username = Username;
     if (Password) updateData.Password = Password;
     if (Permission) updateData.Permission = Permission;
-    if (Branch) updateData.Branch = Branch;
+    if (Branch) updateData.Branch = [...new Set(Branch)]
 
     let updateBranch = await Adminmodel.findByIdAndUpdate(
       id,
@@ -125,7 +125,7 @@ const UpdateAdmin = async (req, res, next) => {
 const GetAllAdmin = async (req, res, next) => {
   try {
     // { Branch: { $in: req.branch } }
-    let admin = await Adminmodel.find();
+    let admin = await Adminmodel.find().populate("Branch")
     return res.status(200).json({
       status: true,
       code: 200,
@@ -160,7 +160,7 @@ const GetAdminById = async (req, res, next) => {
 // Get Own Profile
 const GetOwnProfile = async (req, res, next) => {
   try {
-    let admin = await Adminmodel.findById(req.admin);
+    let admin = await Adminmodel.findById(req.admin).populate('Branch');
     return res.status(200).json({
       status: true,
       code: 200,
@@ -183,7 +183,7 @@ const DeleteAdmin = async (req, res, next) => {
     await Adminmodel.findByIdAndDelete(id);
 
     return res.status(200).json({
-      status: false,
+      status: true,
       code: 200,
       message: "Admin Deleted Successfully",
     });

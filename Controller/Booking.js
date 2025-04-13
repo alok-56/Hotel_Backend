@@ -145,7 +145,7 @@ const BookRoom = async (req, res, next) => {
       })
       .catch(function (error) {
         res.status(400).json({
-          status: false,
+          status: true,
           code: 400,
           message: "Error during payment initiation",
           data: error.message,
@@ -208,7 +208,7 @@ const ValidatePayment = async (req, res, next) => {
           });
         } else {
           return res.status(400).json({
-            status: false,
+            status: true,
             code: 400,
             message: "Payment Failed",
             data: response.data,
@@ -217,7 +217,7 @@ const ValidatePayment = async (req, res, next) => {
       })
       .catch(function (error) {
         res.status(500).json({
-          status: false,
+          status: true,
           code: 500,
           message: "Error validating payment",
           data: error.message,
@@ -329,12 +329,16 @@ const OfflineBooking = async (req, res, next) => {
       Status: true,
     });
     await paymentcreate.save();
+    
     room.BookingDate.push({
       checkin: CheckinDate,
       checkout: CheckOutDate,
       BookingId: bookingroom._id,
     });
+
+    bookingroom.PaymentId = paymentcreate._id;
     await room.save();
+    await bookingroom.save();
 
     return res.status(200).json({
       status: true,
@@ -435,7 +439,7 @@ const MyBooking = async (req, res, next) => {
       return res
         .status(404)
         .json({
-          status: false,
+          status: true,
           code: 404,
           message: "No bookings found for this phone number.",
         })

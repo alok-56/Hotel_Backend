@@ -21,7 +21,7 @@ const CreateBranch = async (req, res, next) => {
     await admin.save();
 
     return res.status(200).json({
-      status: false,
+      status: true,
       code: 200,
       message: "Branch Created Successfully",
       data: branch,
@@ -82,7 +82,7 @@ const GetAllBranch = async (req, res, next) => {
     let branch = await Branchmodel.find();
 
     return res.status(200).json({
-      status: false,
+      status: true,
       code: 200,
       message: "Branch Fecthed Successfully",
       data: branch,
@@ -103,7 +103,7 @@ const GetBranchById = async (req, res, next) => {
     let branch = await Branchmodel.findById(id);
 
     return res.status(200).json({
-      status: false,
+      status: true,
       code: 200,
       message: "Branch Fecthed Successfully",
       data: branch,
@@ -124,7 +124,7 @@ const DeleteBranch = async (req, res, next) => {
     await Branchmodel.findByIdAndDelete(id);
 
     return res.status(200).json({
-      status: false,
+      status: true,
       code: 200,
       message: "Branch Deleted Successfully",
     });

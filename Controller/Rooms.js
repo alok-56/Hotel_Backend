@@ -96,7 +96,7 @@ const UpdateRoom = async (req, res, next) => {
 // Get Room
 const GetRoom = async (req, res, next) => {
   try {
-    let room = await Roommodal.find({ BranchId: { $in: req.branch } });
+    let room = await Roommodal.find({ BranchId: { $in: req.branch } }).populate("BranchId");
 
     return res.status(200).json({
       status: true,

@@ -14,7 +14,6 @@ BranchRouter.post(
   "/create/branch",
   body("Branchname").notEmpty().withMessage("Branchname is required"),
   body("Location").notEmpty().withMessage("Location is required"),
-  body("RoomNo").notEmpty().withMessage("RoomNo is required"),
   body("Description").notEmpty().withMessage("Description is required"),
   Islogin,
   CreateBranch

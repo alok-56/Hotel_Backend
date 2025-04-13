@@ -16,7 +16,8 @@ const AdminSchema = new mongoose.Schema(
       required: true,
     },
     Branch: {
-      type: [],
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Branchmanagement",
     },
     Permission: {
       type: [],
