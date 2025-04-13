@@ -15,8 +15,9 @@ const StaffSchema = new mongoose.Schema(
       required: true,
     },
     BranchId: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+           ref:"Branchmanagement",
+           required: true,
     },
     JoiningDate: {
       type: String,
@@ -30,6 +31,10 @@ const StaffSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    Active:{
+      type:Boolean,
+      default:true
+    }
   },
   { timestamps: true }
 );

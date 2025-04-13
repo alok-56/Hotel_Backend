@@ -10,6 +10,9 @@ const AdminRouter = require("./Routes/Admin");
 const Roomtrouter = require("./Routes/Rooms");
 const bookingrouter = require("./Routes/Booking");
 const FileRouter = require("./Routes/FileUpload");
+const ExpenseRouter = require("./Routes/Expense");
+const StaffRouter = require("./Routes/Staff");
+const Reportrouter = require("./Routes/Report");
 require("dotenv").config();
 DatabaseConnection();
 const app = express();
@@ -29,6 +32,9 @@ app.use("/api/v1/Branch", BranchRouter);
 app.use("/api/v1/Room", Roomtrouter);
 app.use("/api/v1/booking", bookingrouter);
 app.use("/api/v1/file", FileRouter);
+app.use("/api/v1/Expense", ExpenseRouter);
+app.use("/api/v1/Staff", StaffRouter);
+app.use("/api/v1/Report", Reportrouter);
 
 // Not Found Route
 app.use("*", (req, res, next) => {

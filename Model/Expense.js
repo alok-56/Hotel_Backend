@@ -7,7 +7,8 @@ const ExpenseSchema = new mongoose.Schema(
       required: true,
     },
     BranchId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Branchmanagement",
       required: true,
     },
     Amount: {

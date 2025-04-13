@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const SalarySchema = new mongoose.Schema(
   {
     BranchId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Branchmanagement",
       required: true,
     },
     StaffId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Staff",
       required: true,
     },
     Amount: {
