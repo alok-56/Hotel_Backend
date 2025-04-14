@@ -5,6 +5,7 @@ const {
   GetAllBranch,
   GetBranchById,
   DeleteBranch,
+  GetAllBranchForUser,
 } = require("../Controller/Branch");
 const { body } = require("express-validator");
 const Islogin = require("../Middleware/Islogin");
@@ -22,6 +23,7 @@ BranchRouter.post(
 BranchRouter.patch("/update/branch/:id", Islogin, UpdateBranch);
 
 BranchRouter.get("/getall/branch", Islogin, GetAllBranch);
+BranchRouter.get("/getall/branch/website", GetAllBranchForUser);
 
 BranchRouter.get("/get/branch/:id", Islogin, GetBranchById);
 

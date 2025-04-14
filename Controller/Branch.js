@@ -92,6 +92,22 @@ const GetAllBranch = async (req, res, next) => {
   }
 };
 
+// Get All Branch
+const GetAllBranchForUser = async (req, res, next) => {
+  try {
+    let branch = await Branchmodel.find();
+
+    return res.status(200).json({
+      status: true,
+      code: 200,
+      message: "Branch Fecthed Successfully",
+      data: branch,
+    });
+  } catch (error) {
+    return next(new AppErr(error.message, 500));
+  }
+};
+
 //  Get Branch By  Id
 const GetBranchById = async (req, res, next) => {
   try {
@@ -139,4 +155,5 @@ module.exports = {
   GetAllBranch,
   GetBranchById,
   DeleteBranch,
+  GetAllBranchForUser
 };
