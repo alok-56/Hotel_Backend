@@ -25,7 +25,7 @@ BranchRouter.patch("/update/branch/:id", Islogin, UpdateBranch);
 BranchRouter.get("/getall/branch", Islogin, GetAllBranch);
 BranchRouter.get("/getall/branch/website", GetAllBranchForUser);
 
-BranchRouter.get("/get/branch/:id", Islogin, GetBranchById);
+BranchRouter.get("/get/branch/:id", GetBranchById);
 
 BranchRouter.delete("/delete/branch/:id", Islogin, DeleteBranch);
 
