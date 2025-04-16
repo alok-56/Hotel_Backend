@@ -25,7 +25,7 @@ Roomtrouter.patch("/update/room/:id", Islogin, UpdateRoom);
 
 Roomtrouter.get("/getall/room", Islogin, GetRoom);
 
-Roomtrouter.get("/get/room/:id", Islogin, GetRoomById);
+Roomtrouter.get("/get/room/:id", GetRoomById);
 
 Roomtrouter.delete("/delete/room/:id", Islogin, deleteroom);
 
