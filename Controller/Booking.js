@@ -7,6 +7,7 @@ const Roommodal = require("../Model/Rooms");
 const Bookingmodal = require("../Model/Booking");
 const Paymentmodal = require("../Model/Payments");
 const { validationResult } = require("express-validator");
+const generateToken = require("../Helper/GenerateToken");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const Usermodal = require("../Model/User");
@@ -477,7 +478,7 @@ const LoginUser = async (req, res, next) => {
       await Usermodal.create({ Number: Phonenumber });
     }
 
-    let token = await GenerateToken(Phonenumber);
+    let token = await generateToken(Phonenumber);
 
     return res.status(200).json({
       status: true,
