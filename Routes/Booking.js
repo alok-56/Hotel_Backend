@@ -10,6 +10,7 @@ const {
   GetPayment,
   GetPaymentById,
   MyBooking,
+  LoginUser,
 } = require("../Controller/Booking");
 const Islogin = require("../Middleware/Islogin");
 
@@ -51,5 +52,7 @@ bookingrouter.get("/get/payment", Islogin, GetPayment);
 bookingrouter.get("/get/payment/:id", Islogin, GetPaymentById);
 
 bookingrouter.get("/get/mybooking", MyBooking);
+
+bookingrouter.post("/auth/login", LoginUser);
 
 module.exports = bookingrouter;

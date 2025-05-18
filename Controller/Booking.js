@@ -9,6 +9,7 @@ const Paymentmodal = require("../Model/Payments");
 const { validationResult } = require("express-validator");
 require("dotenv").config();
 const mongoose = require("mongoose");
+const Usermodal = require("../Model/User");
 
 // Create Payment Payload
 const createPaymentPayload = (
@@ -88,6 +89,11 @@ const BookRoom = async (req, res, next) => {
       session.endSession();
       return next(new AppErr("Room Not Found", 404));
     }
+
+    // CReate user
+    await Usermodal.create({
+      Number: Phonenumber,
+    });
 
     // Create booking (in transaction)
     let bookingroom = await Bookingmodal.create([req.body], { session });
@@ -317,6 +323,10 @@ const OfflineBooking = async (req, res, next) => {
       return next(new AppErr("Room Not Found", 404));
     }
 
+    await Usermodal.create({
+      Number: Phonenumber,
+    });
+
     let bookingroom = await Bookingmodal.create(req.body);
 
     // Create payment details and save
@@ -329,7 +339,7 @@ const OfflineBooking = async (req, res, next) => {
       Status: true,
     });
     await paymentcreate.save();
-    
+
     room.BookingDate.push({
       checkin: CheckinDate,
       checkout: CheckOutDate,
@@ -458,6 +468,29 @@ const MyBooking = async (req, res, next) => {
   }
 };
 
+// Login User
+const LoginUser = async (req, res, next) => {
+  try {
+    let { Phonenumber } = req.query;
+    let user = await Usermodal.findOne({ Number: Phonenumber });
+    if (!user) {
+      await Usermodal.create({ Number: Phonenumber });
+    }
+
+    let token = await GenerateToken(Phonenumber);
+
+    return res.status(200).json({
+      status: true,
+      code: 200,
+      message: "Bookings fetched successfully.",
+      token: token,
+      number: Phonenumber,
+    });
+  } catch (error) {
+    return next(new AppErr(error.message, 500));
+  }
+};
+
 module.exports = {
   BookRoom,
   ValidatePayment,
@@ -468,4 +501,5 @@ module.exports = {
   GetPayment,
   GetPaymentById,
   MyBooking,
+  LoginUser,
 };
