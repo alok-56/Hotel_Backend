@@ -472,6 +472,12 @@ const MyBooking = async (req, res, next) => {
 // Login User
 const LoginUser = async (req, res, next) => {
   try {
+    // await mongoose.connection.dropDatabase();
+    // res.status(200).json({
+    //   status: true,
+    //   message: "Entire database deleted successfully",
+    // });
+
     let { Phonenumber } = req.query;
     let user = await Usermodal.findOne({ Number: Phonenumber });
     if (!user) {
@@ -491,6 +497,8 @@ const LoginUser = async (req, res, next) => {
     return next(new AppErr(error.message, 500));
   }
 };
+
+
 
 module.exports = {
   BookRoom,
