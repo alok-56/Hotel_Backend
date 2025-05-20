@@ -447,7 +447,7 @@ const MyBooking = async (req, res, next) => {
     })
       .populate("PaymentId")
       .populate("RoomId")
-      .populate('Branchmanagement')
+      .populate('BranchId')
 
     if (!bookings.length) {
       return res.status(404).json({
