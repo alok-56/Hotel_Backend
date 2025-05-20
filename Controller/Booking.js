@@ -444,18 +444,16 @@ const MyBooking = async (req, res, next) => {
     // Corrected query to search for bookings by Phonenumber inside UserInformation
     let bookings = await Bookingmodal.find({
       "UserInformation.Phonenumber": Phonenumber,
-    });
+    })
+      .populate("PaymentId")
+      .populate("RoomId");
 
     if (!bookings.length) {
-      return res
-        .status(404)
-        .json({
-          status: true,
-          code: 404,
-          message: "No bookings found for this phone number.",
-        })
-        .populate("PaymentId")
-        .populate("RoomId");
+      return res.status(404).json({
+        status: true,
+        code: 404,
+        message: "No bookings found for this phone number.",
+      });
     }
 
     return res.status(200).json({
@@ -497,8 +495,6 @@ const LoginUser = async (req, res, next) => {
     return next(new AppErr(error.message, 500));
   }
 };
-
-
 
 module.exports = {
   BookRoom,
