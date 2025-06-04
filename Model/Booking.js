@@ -43,6 +43,11 @@ const BookingSchema = new mongoose.Schema(
     Tax: {
       type: Number,
     },
+    PendingAmount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     TotalAmount: {
       type: Number,
       required: true,
@@ -50,7 +55,7 @@ const BookingSchema = new mongoose.Schema(
     Status: {
       type: String,
       default: "pending",
-      enum: ["pending", "cancelled", "failed", "Booked", "checkout"],
+      enum: ["pending", "cancelled", "failed", "Booked", "checkin", "checkout"],
     },
     Cancelfee: {
       type: Number,

@@ -13,6 +13,11 @@ const {
   LoginUser,
 } = require("../Controller/Booking");
 const Islogin = require("../Middleware/Islogin");
+const {
+  AddExtracharge,
+  GetExtrachargeByBooking,
+  DeleteExtracharge,
+} = require("../Controller/Extracharge");
 
 const bookingrouter = express.Router();
 
@@ -54,5 +59,19 @@ bookingrouter.get("/get/payment/:id", Islogin, GetPaymentById);
 bookingrouter.get("/get/mybooking", MyBooking);
 
 bookingrouter.post("/auth/login", LoginUser);
+
+bookingrouter.post(
+  "/add/extra",
+  body("BookingId").notEmpty().withMessage("BookingId is required"),
+  body("Extratype").notEmpty().withMessage("Extratype is required"),
+  body("Name").notEmpty().withMessage("Name is required"),
+  body("Amount").notEmpty().withMessage("Amount is required"),
+  Islogin,
+  AddExtracharge
+);
+
+bookingrouter.get("/get/extra/:BookingId", Islogin, GetExtrachargeByBooking);
+
+bookingrouter.delete("/extra/delete/:id", Islogin, DeleteExtracharge);
 
 module.exports = bookingrouter;

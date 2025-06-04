@@ -6,6 +6,8 @@ const {
   GetRoomById,
   deleteroom,
   SearchRoom,
+  getRoomInventory,
+  getAllBrancheswithrooms,
 } = require("../Controller/Rooms");
 const Islogin = require("../Middleware/Islogin");
 const { body } = require("express-validator");
@@ -30,5 +32,9 @@ Roomtrouter.get("/get/room/:id", GetRoomById);
 Roomtrouter.delete("/delete/room/:id", Islogin, deleteroom);
 
 Roomtrouter.get("/search/room", SearchRoom);
+
+Roomtrouter.get("/room/inventry", Islogin, getRoomInventory);
+
+Roomtrouter.get("/room/inventry/hotel", Islogin, getAllBrancheswithrooms);
 
 module.exports = Roomtrouter;

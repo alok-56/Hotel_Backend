@@ -64,6 +64,7 @@ const BookRoom = async (req, res, next) => {
       Tax,
       TotalAmount,
       Cancelfee,
+      PendingAmount
     } = req.body;
 
     req.body.bookingtype = "Online";
@@ -197,9 +198,14 @@ const ValidatePayment = async (req, res, next) => {
           booking.Status = "Booked";
 
           let room = await Roommodal.findById(booking.RoomId);
+          let checkin = new Date(booking.CheckinDate);
+          checkin.setHours(11, 0, 0, 0);
+          let checkout = new Date(booking.CheckOutDate);
+          checkout.setHours(12, 0, 0, 0);
+
           room.BookingDate.push({
-            checkin: booking.CheckinDate,
-            checkout: booking.CheckOutDate,
+            checkin: checkin,
+            checkout: checkout,
             BookingId: booking._id,
           });
 
@@ -341,9 +347,15 @@ const OfflineBooking = async (req, res, next) => {
     });
     await paymentcreate.save();
 
+    const checkin = new Date(CheckinDate);
+    checkin.setHours(11, 0, 0, 0);
+
+    const checkout = new Date(CheckOutDate);
+    checkout.setHours(12, 0, 0, 0);
+
     room.BookingDate.push({
-      checkin: CheckinDate,
-      checkout: CheckOutDate,
+      checkin,
+      checkout,
       BookingId: bookingroom._id,
     });
 
@@ -365,7 +377,8 @@ const OfflineBooking = async (req, res, next) => {
 // Update Status of Booking
 const UpdateBookingstatus = async (req, res, next) => {
   try {
-    let { status, bookingid } = req.query;
+    let { status, bookingid, extracharge } = req.query;
+    console.log(extracharge)
     let book = await Bookingmodal.findById(bookingid);
     if (!book) {
       return next(new AppErr("Booking not found", 404));
@@ -375,10 +388,21 @@ const UpdateBookingstatus = async (req, res, next) => {
       return next(new AppErr("Room not found", 404));
     }
     book.Status = status;
-    await Roommodal.updateOne(
-      { "BookingDate.BookingId": bookingid },
-      { $pull: { BookingDate: { BookingId: bookingid } } }
-    );
+    if (status === "checkout" || status === "cancelled") {
+      await Roommodal.updateOne(
+        { "BookingDate.BookingId": bookingid },
+        { $pull: { BookingDate: { BookingId: bookingid } } }
+      );
+    }
+
+    if (status === "checkout") {
+      await Paymentmodal.updateOne(
+        { BookingId: bookingid },
+        {
+          $set: { ExtraChargeAmount: Number(extracharge) },
+        }
+      );
+    }
 
     await book.save();
 
@@ -447,7 +471,7 @@ const MyBooking = async (req, res, next) => {
     })
       .populate("PaymentId")
       .populate("RoomId")
-      .populate('BranchId')
+      .populate("BranchId");
 
     if (!bookings.length) {
       return res.status(404).json({

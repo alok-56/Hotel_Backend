@@ -19,11 +19,16 @@ const PaymentSchema = new mongoose.Schema(
     },
     Tax: {
       type: Number,
-      unique:false
+      unique: false,
     },
     TotalAmount: {
       type: Number,
       required: true,
+    },
+    ExtraChargeAmount: {
+      type: Number,
+      required: true,
+      default:0
     },
     Status: {
       type: Boolean,
